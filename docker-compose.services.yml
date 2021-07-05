@@ -1,0 +1,42 @@
+version: "3.7"
+
+
+services:
+  golang-simple-server:
+    depends_on:
+      - postgres
+    image: golang-server-image
+    environment:
+      DSN: "user=postgres password=4hrb8y4guy45v4tv4fi host=postgres port=5432 database=test sslmode=disable"
+    build: ./
+    container_name: golang-server
+    restart: unless-stopped
+    networks:
+      - plizi
+
+  postgres:
+    image: postgres:alpine
+    environment:
+      POSTGRES_PASSWORD: "4hrb8y4guy45v4tv4fi"
+      POSTGRES_USER: postgres
+      POSTGRES_DB: test
+      LANG: ru_RU.UTF-8
+      LANGUAGE: ru_RU.UTF-8
+      LC_ALL: ru_RU.UTF-8
+    networks:
+      - plizi
+
+  project-nginx:
+    depends_on:
+      - golang-simple-server
+    image: nginx:stable
+    ports:
+      - 127.0.0.1:80:3000
+    volumes:
+      - ./deploy/nginx/config:/etc/nginx/conf.d
+    networks:
+      - plizi
+
+networks:
+  plizi:
+    driver: bridge

@@ -1,0 +1,21 @@
+kind: pipeline
+type: docker
+name: publish
+
+trigger:
+  branches:
+    - master
+  event:
+    - push
+
+steps:
+  - name: build&push
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      repo: katherinetagesjump/golang-server
+      tags: go-drone
+      dockerfile: ./Dockerfile
