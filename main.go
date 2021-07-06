@@ -5,14 +5,16 @@ import (
 	"fmt"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"net/http"
+	"os"
 )
 
 type App struct {
-	DB *DB
+	DB   *DB
+	text string
 }
 
 func (a *App) hello(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, "hello\n")
+	fmt.Fprintf(w, "%s\n", a.text)
 }
 
 func (a *App) add(w http.ResponseWriter, req *http.Request) {
@@ -46,7 +48,9 @@ func main() {
 	//	panic(err)
 	//}
 
-	app := App{DB: nil}
+	env := os.Getenv("HELLO_TEXT")
+
+	app := App{DB: nil, text: env}
 
 	http.HandleFunc("/add", app.add)
 	http.HandleFunc("/get", app.get)
