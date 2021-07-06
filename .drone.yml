@@ -19,3 +19,4 @@ steps:
       repo: katherinetagesjump/golang-server
       tags: go-drone
       dockerfile: ./Dockerfile
+
